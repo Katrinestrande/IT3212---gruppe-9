@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 # a) Data exploration: first few rows, summary statistics, data types
 def data_exploration():
@@ -85,3 +86,72 @@ df['Age at enrollment'] = df['Age at enrollment'].clip(lower=lower, upper=upper)
 
 print(f"\nAge at enrollment after capping: min={df['Age at enrollment'].min()}, "
       f"max={df['Age at enrollment'].max()}")
+
+# 4a) Encoding categorical data
+
+categorical_cols = [
+    'Marital status',
+    'Application mode',
+    'Course',
+    'Daytime/evening attendance',
+    'Previous qualification',
+    'Nacionality',
+    "Mother's qualification",
+    "Father's qualification",
+    "Mother's occupation",
+    "Father's occupation",
+    'Displaced',
+    'Educational special needs',
+    'Debtor',
+    'Tuition fees up to date',
+    'Gender',
+    'Scholarship holder',
+    'International'
+]
+
+# One-hot encoding
+df = pd.get_dummies(df, columns=categorical_cols, dtype=int)
+
+# Label encoding for Target
+label_encoder = LabelEncoder()
+df['Target'] = label_encoder.fit_transform(df['Target'])
+
+print("\nData after encoding:")
+print(df.head())
+
+print("\nTarget encoding:")
+for label, number in zip(
+    label_encoder.classes_,
+    label_encoder.transform(label_encoder.classes_)
+):
+    print(f"{label}: {number}")
+
+
+# 4b) Feature scaling
+
+numerical_cols = [
+    'Application order',
+    'Age at enrollment',
+    'Curricular units 1st sem (credited)',
+    'Curricular units 1st sem (enrolled)',
+    'Curricular units 1st sem (evaluations)',
+    'Curricular units 1st sem (approved)',
+    'Curricular units 1st sem (grade)',
+    'Curricular units 1st sem (without evaluations)',
+    'Curricular units 2nd sem (credited)',
+    'Curricular units 2nd sem (enrolled)',
+    'Curricular units 2nd sem (evaluations)',
+    'Curricular units 2nd sem (approved)',
+    'Curricular units 2nd sem (grade)',
+    'Curricular units 2nd sem (without evaluations)',
+    'Unemployment rate',
+    'Inflation rate',
+    'GDP'
+]
+
+scaler = StandardScaler()
+
+df[numerical_cols] = scaler.fit_transform(df[numerical_cols])
+
+print("\nData after feature scaling:")
+print(df[numerical_cols].head())
