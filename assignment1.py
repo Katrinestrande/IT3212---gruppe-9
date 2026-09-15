@@ -85,4 +85,3 @@ df['Age at enrollment'] = df['Age at enrollment'].clip(lower=lower, upper=upper)
 
 print(f"\nAge at enrollment after capping: min={df['Age at enrollment'].min()}, "
       f"max={df['Age at enrollment'].max()}")
-# Grade columns kept unchanged - 0s likely reflect real dropout cases
